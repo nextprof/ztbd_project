@@ -10,9 +10,21 @@ public class Controller {
     @Autowired
     private ScraperUtils scraperUtils;
 
-    @GetMapping("/api")
-    private String scrap() {
-        scraperUtils.scrap();
+    @GetMapping("/api/podcasts")
+    private String scrapPodcasts() {
+        scraperUtils.scrapPodcasts();
+        return "test";
+    }
+
+    @GetMapping("/api/categories")
+    private String scrapCategories() {
+        scraperUtils.scrapCategories();
+        return "test";
+    }
+
+    @GetMapping("/api/reviews")
+    private String scrapReviews() {
+        scraperUtils.scrapReviews();
         return "test";
     }
 }

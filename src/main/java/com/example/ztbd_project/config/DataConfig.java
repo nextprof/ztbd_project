@@ -31,7 +31,8 @@ public class DataConfig {
     @Primary
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/ztbd");
         dataSource.setUsername("root");
         dataSource.setPassword("letmein");
@@ -50,7 +51,7 @@ public class DataConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
         lef.setPackagesToScan(
-                "com.example.ztbd.domain"
+                "com.example.ztbd_project.domain"
         );
         lef.setDataSource(dataSource());
         lef.setPersistenceUnitName("master");
@@ -74,8 +75,8 @@ public class DataConfig {
             {
                 setProperty("hibernate.dialect.storage_engine", "innodb");
                 setProperty("hibernate.id.new_generator_mappings", "false");
-                setProperty("hibernate.hbm2ddl.auto", "create");
-//                setProperty("hibernate.hbm2ddl.auto", "update");
+//                setProperty("hibernate.hbm2ddl.auto", "create");
+                setProperty("hibernate.hbm2ddl.auto", "update");
 
                 setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 
@@ -89,7 +90,8 @@ public class DataConfig {
 
                 setProperty("org.hibernate.FlushMode", "COMMIT");
                 setProperty("hibernate.format_sql", "false");
-                setProperty("hibernate.show_sql", "true");
+                setProperty("hibernate.show_sql", "false");
+//                setProperty("hibernate.show_sql", "true");
             }
         };
 

@@ -1,15 +1,16 @@
 package com.example.ztbd_project.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Podcast {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @Column(name = "podcast_id")
-    private String id;
+    private String podcastId;
 
     @Column(name = "itunes_id")
     private String itunesId;
@@ -31,13 +32,14 @@ public class Podcast {
     private String ratingsCount;
 
     @Column(name = "scraped_at")
-    private String scprapedAt;
+    private String scrapedAt;
 
     public Podcast() {
     }
 
-    public Podcast(String id, String itunesId, String slug, String itunesUrl, String title, String author, String description, String averageRating, String ratingsCount, String scprapedAt) {
-        this.id = id;
+
+    public Podcast(String podcastId, String itunesId, String slug, String itunesUrl, String title, String author, String description, String averageRating, String ratingsCount, String scrapedAt) {
+        this.podcastId = podcastId;
         this.itunesId = itunesId;
         this.slug = slug;
         this.itunesUrl = itunesUrl;
@@ -46,15 +48,20 @@ public class Podcast {
         this.description = description;
         this.averageRating = averageRating;
         this.ratingsCount = ratingsCount;
-        this.scprapedAt = scprapedAt;
+        this.scrapedAt = scrapedAt;
     }
 
-    public Podcast(String id) {
-        this.id = id;
-    }
 
-    public String getId() {
+    public Long getId() {
         return id;
+    }
+
+    public String getPodcastId() {
+        return podcastId;
+    }
+
+    public String getScrapedAt() {
+        return scrapedAt;
     }
 
     public String getItunesId() {
@@ -89,9 +96,6 @@ public class Podcast {
         return ratingsCount;
     }
 
-    public String getScprapedAt() {
-        return scprapedAt;
-    }
 }
 
 
