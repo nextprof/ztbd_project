@@ -20,6 +20,7 @@ public class ScraperUtils {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+
     public void scrap() {
         System.out.println("podkasty");
         try {
