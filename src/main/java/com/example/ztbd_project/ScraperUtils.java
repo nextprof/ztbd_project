@@ -36,7 +36,7 @@ public class ScraperUtils {
             while (scanner.hasNext()) {
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if (counter % 100 == 0 && counter != 0) {
+                if ((counter % 10000 == 0 && counter != 0) || !scanner.hasNext()) {
                     stringBuilder.append("]");
                     JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
                     transactionTemplate.executeWithoutResult(status -> {
@@ -83,7 +83,7 @@ public class ScraperUtils {
             while (scanner.hasNext()) {
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if (counter % 100 == 0 && counter != 0) {
+                if ((counter % 10000 == 0 && counter != 0) || !scanner.hasNext()) {
                     stringBuilder.append("]");
                     JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
                     transactionTemplate.executeWithoutResult(status -> {
@@ -122,7 +122,7 @@ public class ScraperUtils {
             while (scanner.hasNext()) {
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if (counter % 100 == 0 && counter != 0) {
+                if ((counter % 10000 == 0 && counter != 0) || !scanner.hasNext()) {
                     stringBuilder.append("]");
                     JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
                     transactionTemplate.executeWithoutResult(status -> {
@@ -130,12 +130,6 @@ public class ScraperUtils {
                         for (int i = 0; i < jsonArray.size() - 1; i++) {
 
                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-//{"podcast_id":"52e3d2c4fab4e80a8bb75ad144671d96"
-// ,"title":"Miss gross overrated as interviewer."
-// ,"content":"The Howard stern interview was horrible. I learned nothing- she doesn’t understand psychoanalysis so she couldn’t ask appropriate questions about how it’s helped him. She’s not very smart.",
-// "rating":1,
-// "author_id":"e5d461c5f91c8d2"
-// ,"created_at":"2019-06-07 14:25:34+00"}
                             String podcastId = !jsonObject.get("podcast_id").isJsonNull() ? jsonObject.get("podcast_id").getAsString() : null;
                             String title = !jsonObject.get("title").isJsonNull() ? jsonObject.get("title").getAsString() : null;
                             String content = !jsonObject.get("content").isJsonNull() ? jsonObject.get("content").getAsString() : null;
