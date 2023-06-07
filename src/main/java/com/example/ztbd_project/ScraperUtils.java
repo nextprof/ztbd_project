@@ -1,6 +1,9 @@
 package com.example.ztbd_project;
 
 import com.example.ztbd_project.domain.*;
+import com.example.ztbd_project.redis.CategoryRepositoryRedis;
+import com.example.ztbd_project.redis.PodcastRepositoryRedis;
+import com.example.ztbd_project.redis.ReviewRepositoryRedis;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -17,7 +20,11 @@ public class ScraperUtils {
     @Autowired
     private PodcastRepository podcastRepository;
     @Autowired
-    private CategoryRepository categoryRepository;
+    private PodcastRepositoryRedis podcastRepositoryRedis;
+    @Autowired
+    private CategoryRepositoryRedis categoryRepositoryRedis;
+    @Autowired
+    private ReviewRepositoryRedis reviewRepositoryRedis;
     @Autowired
     private ReviewRepository reviewRepository;
     @Autowired
@@ -36,7 +43,12 @@ public class ScraperUtils {
             while (scanner.hasNext()) {
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if ((counter % 10000 == 0 && counter != 0) || !scanner.hasNext()) {
+                if (counter < 779602)
+                    continue;
+                if (counter == 779602)
+                    stringBuilder = new StringBuilder("[");
+
+                if ((counter % 20000 == 0 && counter != 0) || !scanner.hasNext()) {
                     stringBuilder.append("]");
                     JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
                     transactionTemplate.executeWithoutResult(status -> {
@@ -56,9 +68,9 @@ public class ScraperUtils {
                             String ratingsCount = !jsonObject.get("ratings_count").isJsonNull() ? jsonObject.get("ratings_count").getAsString() : null;
                             String scrapedAt = !jsonObject.get("scraped_at").isJsonNull() ? jsonObject.get("scraped_at").getAsString() : null;
 
-                            Podcast podcast = new Podcast(podcastId, itunesId, slug, itunesUrl, title, author, description,
+                            com.example.ztbd_project.redis.Podcast podcast = new com.example.ztbd_project.redis.Podcast(podcastId, itunesId, slug, itunesUrl, title, author, description,
                                     averageRating, ratingsCount, scrapedAt);
-                            podcastRepository.save(podcast);
+                            podcastRepositoryRedis.save(podcast);
                         }
                     });
                     stringBuilder = new StringBuilder("[");
@@ -96,8 +108,8 @@ public class ScraperUtils {
                             String itunesId = !jsonObject.get("itunes_id").isJsonNull() ? jsonObject.get("itunes_id").getAsString() : null;
                             String name = !jsonObject.get("category").isJsonNull() ? jsonObject.get("category").getAsString() : null;
 
-                            Category category = new Category(podcastId, itunesId, name);
-                            categoryRepository.save(category);
+                            com.example.ztbd_project.redis.Category category = new com.example.ztbd_project.redis.Category(podcastId, itunesId, name);
+                            categoryRepositoryRedis.save(category);
                         }
                     });
                     stringBuilder = new StringBuilder("[");
@@ -123,7 +135,7 @@ public class ScraperUtils {
 
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if(counter < 4199900) {
+                if (counter < 4199900) {
                     stringBuilder = new StringBuilder("[");
                     continue;
                 }
@@ -142,8 +154,8 @@ public class ScraperUtils {
                             String authorId = !jsonObject.get("author_id").isJsonNull() ? jsonObject.get("author_id").getAsString() : null;
                             String createdAt = !jsonObject.get("created_at").isJsonNull() ? jsonObject.get("created_at").getAsString() : null;
 
-                            Review review = new Review(podcastId, title, content, rating, authorId, createdAt);
-                            reviewRepository.save(review);
+                            com.example.ztbd_project.redis.Review review = new com.example.ztbd_project.redis.Review(podcastId, title, content, rating, authorId, createdAt);
+                            reviewRepositoryRedis.save(review);
                         }
                     });
                     stringBuilder = new StringBuilder("[");
