@@ -120,9 +120,14 @@ public class ScraperUtils {
 
             StringBuilder stringBuilder = new StringBuilder("[");
             while (scanner.hasNext()) {
+
                 stringBuilder.append(scanner.nextLine()).append(",");
                 counter++;
-                if ((counter % 10000 == 0 && counter != 0) || !scanner.hasNext()) {
+                if(counter < 4199900) {
+                    stringBuilder = new StringBuilder("[");
+                    continue;
+                }
+                if ((counter % 5000 == 0 && counter != 0) || !scanner.hasNext()) {
                     stringBuilder.append("]");
                     JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
                     transactionTemplate.executeWithoutResult(status -> {
