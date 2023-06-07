@@ -32,6 +32,46 @@ public class PodcastRepositoryImpl implements PodcastRepository {
         entityManager.remove(obj);
     }
 
+
+    @Override
+    public Podcast findOne() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Podcast> query = builder.createQuery(Podcast.class);
+
+        Root<Podcast> root = query.from(Podcast.class);
+        Set<Predicate> predicates = new HashSet<Predicate>();
+
+        TypedQuery<Podcast> typedQuery = entityManager.createQuery(
+                query
+                        .select(root)
+                        .where(predicates.toArray(new Predicate[]{}))
+        );
+        typedQuery.setMaxResults(1);
+        return typedQuery.getSingleResult();
+    }
+
+    @Override
+    public List<Podcast> join() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Podcast> query = builder.createQuery(Podcast.class);
+
+        Root<Podcast> root = query.from(Podcast.class);
+        Set<Predicate> predicates = new HashSet<Predicate>();
+
+        Root<Review> reviewRoot = query.from(Review.class);
+        Root<Category> categoryRoot = query.from(Category.class);
+        predicates.add(builder.equal(reviewRoot.get("podcastUid"), root.get("podcastId")));
+        predicates.add(builder.equal(categoryRoot.get("podcastId"), root.get("podcastId")));
+
+        TypedQuery<Podcast> typedQuery = entityManager.createQuery(
+                query
+                        .select(root)
+                        .where(predicates.toArray(new Predicate[]{}))
+        );
+        typedQuery.setMaxResults(1);
+        return typedQuery.getResultList();
+    }
+
     @Override
     public List<Podcast> findAll() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();

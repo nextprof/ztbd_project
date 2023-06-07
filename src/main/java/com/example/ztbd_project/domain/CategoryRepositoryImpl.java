@@ -34,6 +34,23 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public Category findOne() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Category> query = builder.createQuery(Category.class);
+
+        Root<Category> root = query.from(Category.class);
+        Set<Predicate> predicates = new HashSet<Predicate>();
+
+        TypedQuery<Category> typedQuery = entityManager.createQuery(
+                query
+                        .select(root)
+                        .where(predicates.toArray(new Predicate[]{}))
+        );
+        typedQuery.setMaxResults(1);
+        return typedQuery.getSingleResult();
+    }
+
+    @Override
     public List<Category> findAll() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Category> query = builder.createQuery(Category.class);

@@ -34,6 +34,23 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public Review findOne() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Review> query = builder.createQuery(Review.class);
+
+        Root<Review> root = query.from(Review.class);
+        Set<Predicate> predicates = new HashSet<Predicate>();
+
+        TypedQuery<Review> typedQuery = entityManager.createQuery(
+                query
+                        .select(root)
+                        .where(predicates.toArray(new Predicate[]{}))
+        );
+        typedQuery.setMaxResults(1);
+        return typedQuery.getSingleResult();
+    }
+
+    @Override
     public List<Review> findAll() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Review> query = builder.createQuery(Review.class);
